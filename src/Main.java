@@ -1,23 +1,51 @@
 public class Main {
     public static void main(String[] args) {
-        WeightedGraph<Vertex<String>> graph = new WeightedGraph<>();
+        WeightedGraph<String> weightedGraph = new WeightedGraph<>(true);
+        fillWithWeights(weightedGraph);
 
-        Vertex<String> v1 = new Vertex<>("A");
-        Vertex<String> v2 = new Vertex<>("B");
-        Vertex<String> v3 = new Vertex<>("C");
+        System.out.println("Dijkstra:");
+        Search<String> djk = new DijkstraSearch<>(weightedGraph, "New York");
+        outputPath(djk, "Los Angeles");
 
-        graph.addVertex(v1);
-        graph.addVertex(v2);
-        graph.addVertex(v3);
+        System.out.println("--------------------------------");
 
-        graph.addEdge(v1, v2, 1.0);
-        graph.addEdge(v1, v3, 4.0);
-        graph.addEdge(v2, v3, 2.0);
+        MyGraph<String> graph = new MyGraph<>(true);
+        fillWithoutWeights(graph);
 
-        BFS<Vertex<String>> bfs = new BFS<>();
-        System.out.println("BFS starting from A: " + bfs.bfs(v1, graph.getVertices()));
+        System.out.println("BFS:");
+        Search<String> bfs = new BreadthFirstSearch<>(graph, "New York");
+        outputPath(bfs, "Los Angeles");
+    }
 
-        DijkstraSearch<Vertex<String>> dijkstra = new DijkstraSearch<>();
-        System.out.println("Dijkstra starting from A: " + dijkstra.dijkstra(v1, graph.getVertices()));
+    public static void fillWithoutWeights(MyGraph<String> graph) {
+        graph.addEdge("New York", "Chicago");
+        graph.addEdge("Chicago", "Denver");
+        graph.addEdge("Denver", "Los Angeles");
+        graph.addEdge("New York", "Atlanta");
+        graph.addEdge("Atlanta", "Chicago");
+        graph.addEdge("Atlanta", "Los Angeles");
+        graph.addEdge("Denver", "Seattle");
+    }
+
+    public static void fillWithWeights(WeightedGraph<String> graph) {
+        graph.addEdge("New York", "Chicago", 7.5);
+        graph.addEdge("Chicago", "Denver", 5.0);
+        graph.addEdge("Denver", "Los Angeles", 8.0);
+        graph.addEdge("New York", "Atlanta", 9.0);
+        graph.addEdge("Atlanta", "Chicago", 6.5);
+        graph.addEdge("Atlanta", "Los Angeles", 12.0);
+        graph.addEdge("Denver", "Seattle", 4.0);
+    }
+
+    public static void outputPath(Search<String> search, String key) {
+        Iterable<String> path = search.pathTo(key);
+        if (path == null) {
+            System.out.println("No path found to " + key);
+        } else {
+            for (String v : path) {
+                System.out.print(v + " -> ");
+            }
+            System.out.println();
+        }
     }
 }

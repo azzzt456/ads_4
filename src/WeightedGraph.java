@@ -1,26 +1,22 @@
-import java.util.*;
-
-public class WeightedGraph<Vertex> {
-    private Map<Vertex, List<Edge<Vertex>>> map ;
-
-    public WeightedGraph() {
-        map = new HashMap<>();
+public class WeightedGraph<V> extends MyGraph<V> {
+    public WeightedGraph(boolean undirected) {
+        super(undirected);
     }
 
-    public void addVertex(Vertex vertex) {
-        map.put(vertex, new LinkedList<>());
-    }
-
-    public void addEdge(Vertex source, Vertex dest, double weight) {
-        Edge<Vertex> edge = new Edge<>(source, dest, weight);
-        map.get(source).add(edge);
-    }
-
-    public List<Edge<Vertex>> getEdges(Vertex vertex) {
-        return map.get(vertex);
-    }
-
-    public Set<Vertex> getVertices() {
-        return map.keySet();
+    public void addEdge(V source, V dest, double weight) {
+        Vertex<V> sourceV = map.get(source);
+        Vertex<V> destV = map.get(dest);
+        if (sourceV == null) {
+            sourceV = new Vertex<>(source);
+            addVertex(source, sourceV);
+        }
+        if (destV == null) {
+            destV = new Vertex<>(dest);
+            addVertex(dest, destV);
+        }
+        sourceV.addAdjacentVertices(destV, weight);
+        if (undirected) {
+            destV.addAdjacentVertices(sourceV, weight);
+        }
     }
 }
