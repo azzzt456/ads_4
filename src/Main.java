@@ -7,8 +7,6 @@ public class Main {
         Search<String> djk = new DijkstraSearch<>(weightedGraph, "New York");
         outputPath(djk, "Los Angeles");
 
-        System.out.println("--------------------------------");
-
         MyGraph<String> graph = new MyGraph<>(true);
         fillWithoutWeights(graph);
 
